@@ -84,7 +84,7 @@ unsigned int specseek_get_cpu_base_family(){
 unsigned int specseek_get_cpu_extended_family(){
     unsigned int eax, ebx, ecx, edx;
     cpuid(1, 0, &eax, &ebx, &ecx, &edx);
-    return (eax >> 20) & 0xF; 
+    return (eax >> 20) & 0xFF; 
 }
 
 /// @brief extracts the full model value from CPUID using the base and extended model with the family

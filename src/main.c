@@ -2,6 +2,8 @@
 #include <string.h>
 #include <cpuid/parse/identifiers.h>
 #include <cpuid/parse/cache.h>
+#include <cpuid/parse/specifications.h>
+#include <cpuid/parse/features.h>
 
 
 /// @brief will populate the identifier struct with vendor, brand, model, family and revision
@@ -35,4 +37,16 @@ void specseek_set_cpuid_cache(specseek_cpu_cache *cpu_cache){
     cpu_cache->L1_INSTRUCTION_CACHE = discovered_cache.L1_INSTRUCTION_CACHE;
     cpu_cache->L2_CACHE = discovered_cache.L2_CACHE;
     cpu_cache->L3_CACHE = discovered_cache.L3_CACHE;
+}
+
+void specseek_set_cpuid_specifications(specseek_cpu_specifications *specs){
+    specseek_cpu_specifications discovered_specs = specseek_get_cpu_specifications();
+    specs->physical_core_count     = discovered_specs.physical_core_count;
+    specs->threads_per_core        = discovered_specs.threads_per_core;
+    specs->logical_processor_count = discovered_specs.logical_processor_count;
+}
+
+void specseek_set_cpuid_features(specseek_cpu_features *features){
+    specseek_cpu_features discovered_features = specseek_get_cpu_features();
+    *features = discovered_features;
 }
