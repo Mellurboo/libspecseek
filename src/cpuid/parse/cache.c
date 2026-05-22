@@ -8,7 +8,6 @@ specseek_cpu_cache cpu_get_cache_info(void) {
     specseek_cpu_cache info         = {0, 0, 0, 0};
     specseek_cpu_vendor_t vendor    = specseek_get_cpu_vendor_type();
 
-
     /*
         Intel leaf 0x04: Pentium 4 and Later
     */
@@ -28,11 +27,11 @@ specseek_cpu_cache cpu_get_cache_info(void) {
 
             switch (cache_level) {
                 case 1:
-                    if      (cache_type == 1) info.L1_DATA_CACHE = size_kb;
-                    else if (cache_type == 2) info.L1_INSTRUCTION_CACHE = size_kb;
+                    if      (cache_type == 1) info.L1_data_cache = size_kb;
+                    else if (cache_type == 2) info.L1_instruction_cache = size_kb;
                     break;
-                case 2: info.L2_CACHE = size_kb; break;
-                case 3: info.L3_CACHE = size_kb; break;
+                case 2: info.L2_cache = size_kb; break;
+                case 3: info.L3_cache = size_kb; break;
             }
             level++;
         }
@@ -59,15 +58,15 @@ specseek_cpu_cache cpu_get_cache_info(void) {
 
             switch (cache_level) {
                 case 1:
-                    if      (cache_type == 1) info.L1_DATA_CACHE = size_kb;
-                    else if (cache_type == 2) info.L1_INSTRUCTION_CACHE = size_kb;
+                    if      (cache_type == 1) info.L1_data_cache = size_kb;
+                    else if (cache_type == 2) info.L1_instruction_cache = size_kb;
                     break;
-                case 2: info.L2_CACHE = size_kb; break;
-                case 3: info.L3_CACHE = size_kb; break;
+                case 2: info.L2_cache = size_kb; break;
+                case 3: info.L3_cache = size_kb; break;
             }
             level++;
         }
-        if (info.L1_DATA_CACHE || info.L1_INSTRUCTION_CACHE || info.L2_CACHE || info.L3_CACHE)
+        if (info.L1_data_cache || info.L1_instruction_cache || info.L2_cache || info.L3_cache)
             return info;
     }
 
@@ -77,14 +76,14 @@ specseek_cpu_cache cpu_get_cache_info(void) {
     */
     if (specseek_cpu_get_max_supported_extended_leaf() >= 0x80000005) {
         cpuid(0x80000005, 0, &eax, &ebx, &ecx, &edx);
-        info.L1_DATA_CACHE = (ecx >> 24) & 0xFF;
-        info.L1_INSTRUCTION_CACHE = (edx >> 24) & 0xFF;
+        info.L1_data_cache = (ecx >> 24) & 0xFF;
+        info.L1_instruction_cache = (edx >> 24) & 0xFF;
     }
 
     if (specseek_cpu_get_max_supported_extended_leaf() >= 0x80000006) {
         cpuid(0x80000006, 0, &eax, &ebx, &ecx, &edx);
-        info.L2_CACHE = (ecx >> 16) & 0xFFFF;
-        info.L3_CACHE = ((edx >> 18) & 0x3FFF) * 512;
+        info.L2_cache = (ecx >> 16) & 0xFFFF;
+        info.L3_cache = ((edx >> 18) & 0x3FFF) * 512;
     }
 
     return info;

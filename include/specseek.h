@@ -3,6 +3,8 @@
 #define CPU_VENDOR_STRING_LENGTH    13
 #define CPU_BRAND_STRING_LENGTH     49
 
+#define HYPERVISOR_VENDOR_STRING_LENGTH 13
+
 typedef enum specseek_cpu_vendor{
     AMD,
     Intel,
@@ -11,30 +13,30 @@ typedef enum specseek_cpu_vendor{
 
 typedef struct {    
     // Vendor & Processor Information
-    specseek_cpu_vendor_t CPU_VENDOR_TYPE;
+    specseek_cpu_vendor_t cpu_vendor_type;
 
-    char                CPU_VENDOR_STRING[CPU_VENDOR_STRING_LENGTH];
-    char                CPU_BRAND_STRING[CPU_BRAND_STRING_LENGTH];
+    char                cpu_vendor_string[CPU_VENDOR_STRING_LENGTH];
+    char                cpu_brand_string[CPU_BRAND_STRING_LENGTH];
 
     // Model, Extended Model, Full Model
-    unsigned int        CPU_MODEL;
-    unsigned int        CPU_MODEL_BASE;
-    unsigned int        CPU_MODEL_EXTENDED;
+    unsigned int        cpu_model;
+    unsigned int        cpu_model_base;
+    unsigned int        cpu_model_extended;
 
     // Family Information
-    unsigned int        CPU_FAMILY;
-    unsigned int        CPU_FAMILY_BASE;
-    unsigned int        CPU_FAMILY_EXTENDED;
+    unsigned int        cpu_family;
+    unsigned int        cpu_family_base;
+    unsigned int        cpu_family_extended;
 
     // Revision
-    unsigned int        CPU_REVISION;
+    unsigned int        cpu_revision;
 } specseek_cpu_identifiers;
 
 typedef struct {
-    unsigned int L1_DATA_CACHE;
-    unsigned int L1_INSTRUCTION_CACHE;
-    unsigned int L2_CACHE;
-    unsigned int L3_CACHE;
+    unsigned int L1_data_cache;
+    unsigned int L1_instruction_cache;
+    unsigned int L2_cache;
+    unsigned int L3_cache;
 } specseek_cpu_cache;
 
 typedef struct {
@@ -44,6 +46,36 @@ typedef struct {
     unsigned long        logical_processor_count;
 
 } specseek_cpu_specifications;
+
+typedef struct {
+    unsigned char physical_address_bits;
+    unsigned char virtual_address_bits;
+} specseek_cpu_address_space;
+
+typedef struct {
+    unsigned int base_mhz;
+    unsigned int max_mhz;
+    unsigned int bus_mhz;
+} specseek_cpu_frequency;
+
+typedef struct {
+    char vendor_string[HYPERVISOR_VENDOR_STRING_LENGTH];
+    unsigned char present;
+} specseek_cpu_hypervisor;
+
+typedef struct {
+    unsigned char dts;
+    unsigned char turbo_boost;
+    unsigned char arat;
+    unsigned char hwp_feedback;
+    unsigned char energy_efficient_turbo;
+} specseek_cpu_thermal;
+
+typedef struct {
+    unsigned char version;
+    unsigned char general_counter_count;
+    unsigned char general_counter_width;
+} specseek_cpu_perfmon;
 
 typedef struct {
 
@@ -276,3 +308,23 @@ void specseek_set_cpuid_specifications(specseek_cpu_specifications *specs);
 /// @brief populates the features struct with supported CPU feature flags discovered via CPUID
 /// @param features pointer to caller features structure
 void specseek_set_cpuid_features(specseek_cpu_features *features);
+
+/// @brief populates the address space struct with physical and virtual address bit widths
+/// @param info pointer to caller address space structure
+void specseek_set_cpuid_address_space(specseek_cpu_address_space *info);
+
+/// @brief populates the frequency struct with base, max, and bus frequencies in MHz
+/// @param info pointer to caller frequency structure
+void specseek_set_cpuid_frequency(specseek_cpu_frequency *info);
+
+/// @brief populates the hypervisor struct with vendor string if a hypervisor is present
+/// @param info pointer to caller hypervisor structure
+void specseek_set_cpuid_hypervisor(specseek_cpu_hypervisor *info);
+
+/// @brief populates the thermal struct with power management feature flags
+/// @param info pointer to caller thermal structure
+void specseek_set_cpuid_thermal(specseek_cpu_thermal *info);
+
+/// @brief populates the perfmon struct with architectural performance monitoring capabilities
+/// @param info pointer to caller perfmon structure
+void specseek_set_cpuid_perfmon(specseek_cpu_perfmon *info);

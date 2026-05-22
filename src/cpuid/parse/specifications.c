@@ -63,15 +63,18 @@ static int amd_specifications(specseek_cpu_specifications *specs) {
 
     unsigned int eax, ebx, ecx, edx;
 
+    //reports (logical processors in package - 1) on Zen, not physical cores
     cpuid(0x80000008, 0, &eax, &ebx, &ecx, &edx);
-    unsigned int physical_cores = (ecx & 0xFF) + 1;
+    unsigned int logical_cores = (ecx & 0xFF) + 1;
 
     cpuid(0x8000001E, 0, &eax, &ebx, &ecx, &edx);
     unsigned int threads_per_core = ((ebx >> 8) & 0xFF) + 1;
+    if (threads_per_core < 1) threads_per_core = 1;
 
-    specs->physical_core_count     = physical_cores;
+    specs->logical_processor_count = logical_cores;
     specs->threads_per_core        = threads_per_core;
-    specs->logical_processor_count = physical_cores * threads_per_core;
+    specs->physical_core_count     = logical_cores / threads_per_core;
+    if (specs->physical_core_count < 1) specs->physical_core_count = 1;
     return 1;
 }
 
